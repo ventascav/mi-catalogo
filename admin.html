@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel Admin — Catálogo</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Inter','system-ui','sans-serif'] } } } }
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="min-h-screen bg-slate-100 dark:bg-[#0a0a0f] text-slate-900 dark:text-slate-100 antialiased">
+
+<!-- ============ LOCK SCREEN ============ -->
+<div id="lock" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-100 dark:bg-[#0a0a0f]">
+  <div class="w-full max-w-sm p-8 rounded-3xl bg-white dark:bg-slate-900 shadow-2xl border border-slate-200 dark:border-slate-800 text-center">
+    <div class="text-4xl mb-4">🔒</div>
+    <h1 class="text-xl font-bold mb-1">Panel de administración</h1>
+    <p class="text-sm text-slate-500 mb-6">Introduce la contraseña para acceder</p>
+    <input id="pass" type="password" placeholder="Contraseña" class="w-full px-4 py-3 rounded-xl bg-slate-100 dark:bg-slate-800 outline-none border border-transparent focus:border-violet-500 text-center mb-3">
+    <button id="btn-unlock" class="btn-primary w-full py-3 rounded-xl text-white font-semibold">Entrar</button>
+    <p id="lock-error" class="hidden text-red-500 text-xs mt-3">Contraseña incorrecta</p>
+    <p class="text-[10px] text-slate-400 mt-6">Por defecto: <code class="font-mono">admin123</code> — cámbiala en <code class="font-mono">js/admin.js</code></p>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
+<div id="app" class="hidden">
+  <!-- Header -->
+  <header class="sticky top-0 z-30 glass border-b border-slate-200/60 dark:border-slate-800/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">⚙️</span>
+        <h1 class="font-bold">Panel Admin</h1>
+      </div>
+      <div class="flex items-center gap-2">
+        <a href="index.html" target="_blank" class="text-sm px-3 py-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Ver tienda ↗</a>
+        <button id="logout" class="text-sm px-3 py-2 rounded-full hover:bg-red-50 dark:hover:bg-red-900/30 text-red-500 transition-colors">Salir</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+    <!-- ACCIONES SUPERIORES -->
+    <div class="grid sm:grid-cols-3 gap-3">
+      <button id="btn-export" class="p-4 rounded-2xl bg-gradient-to-br from-violet-600 to-fuchsia-500 text-white font-semibold flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-shadow">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+        Descargar ZIP (JSON + imágenes)
+      </button>
+      <label class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 font-semibold flex items-center justify-center gap-2 cursor-pointer hover:border-violet-500 transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+        Importar products.json
+        <input id="import-json" type="file" accept=".json" class="hidden">
+      </label>
+      <button id="btn-reset" class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 font-semibold flex items-center justify-center gap-2 hover:border-red-400 hover:text-red-500 transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3"/></svg>
+        Reiniciar todo
+      </button>
+    </div>
+
+    <!-- SETTINGS TIENDA -->
+    <section class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+      <button id="toggle-settings" class="w-full p-5 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+        <h2 class="font-bold text-lg flex items-center gap-2">🏪 Configuración de la tienda</h2>
+        <svg class="w-5 h-5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+      </button>
+      <div id="settings-panel" class="p-5 pt-0 grid sm:grid-cols-2 gap-4 border-t border-slate-100 dark:border-slate-800">
+        <label class="block"><span class="text-xs font-medium text-slate-500">Nombre de la tienda</span>
+          <input id="s-nombre" class="mt-1 w-full px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 outline-none focus:ring-2 ring-violet-500/50"></label>
+        <label class="block"><span class="text-xs font-medium text-slate-500">Logo (emoji o URL)</span>
+          <input id="s-logo" class="mt-1 w-full px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 outline-none focus:ring-2 ring-violet-500/50"></label>
+        <label class="block sm:col-span-2"><span class="text-xs font-medium text-slate-500">Descripción</span>
+          <input id="s-descripcion" class="mt-1 w-full px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 outline-none focus:ring-2 ring-violet-500/50"></label>
+        <label class="block"><span class="text-xs font-medium text-slate-500">WhatsApp (ej: 521234567890)</span>
+          <input id="s-whatsapp" class="mt-1 w-full px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 outline-none focus:ring-2 ring-violet-500/50"></label>
+        <label class="block"><span class="text-xs font-medium text-slate-500">Símbolo de moneda</span>
+          <input id="s-simbolo" class="mt-1 w-full px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 outline-none focus:ring-2 ring-violet-500/50"></label>
+        <label class="block"><span class="text-xs font-medium text-slate-500">Código moneda (USD, MXN, ARS...)</span>
+          <input id="s-moneda" class="mt-1 w-full px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 outline-none focus:ring-2 ring-violet-500/50"></label>
+        <label class="block"><span class="text-xs font-medium text-slate-500">Email</span>
+          <input id="s-email" class="mt-1 w-full px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 outline-none focus:ring-2 ring-violet-500/50"></label>
+        <label class="block sm:col-span-2"><span class="text-xs font-medium text-slate-500">Instagram (URL)</span>
+          <input id="s-instagram" class="mt-1 w-full px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 outline-none focus:ring-2 ring-violet-500/50"></label>
+        <div class="sm:col-span-2 flex justify-end">
+          <button id="save-settings" class="btn-primary px-5 py-2.5 rounded-xl text-white font-semibold text-sm">Guardar configuración</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- FORM PRODUCTO -->
+    <section class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5">
+      <div class="flex items-center justify-between mb-5">
+        <h2 id="form-title" class="font-bold text-lg">➕ Añadir producto</h2>
+        <button id="cancel-edit" class="hidden text-sm text-slate-500 hover:text-violet-500">Cancelar edición</button>
+      </div>
+
+      <form id="form-producto" class="grid sm:grid-cols-2 gap-4">
+        <input type="hidden" id="p-id">
+
+        <label class="block sm:col-span-2"><span class="text-xs font-medium text-slate-500">Nombre *</span>
+          <input id="p-nombre" required class="mt-1 w-full px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 outline-none focus:ring-2 ring-violet-500/50"></label>
+
+        <label class="block"><span class="text-xs font-medium text-slate-500">Precio *</span>
+          <input id="p-precio" type="number" step="0.01" min="0" required class="mt-1 w-full px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 outline-none focus:ring-2 ring-violet-500/50"></label>
+
+        <label class="block"><span class="text-xs font-medium text-slate-500">Categoría *</span>
+          <input id="p-categoria" required list="lista-categorias" class="mt-1 w-full px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 outline-none focus:ring-2 ring-violet-500/50">
+          <datalist id="lista-categorias"></datalist></label>
+
+        <label class="block sm:col-span-2"><span class="text-xs font-medium text-slate-500">Descripción</span>
+          <textarea id="p-descripcion" rows="3" class="mt-1 w-full px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 outline-none focus:ring-2 ring-violet-500/50"></textarea></label>
+
+        <label class="block"><span class="text-xs font-medium text-slate-500">Etiquetas (separadas por coma)</span>
+          <input id="p-etiquetas" placeholder="nuevo, oferta" class="mt-1 w-full px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 outline-none focus:ring-2 ring-violet-500/50"></label>
+
+        <label class="flex items-center gap-2 mt-6">
+          <input id="p-stock" type="checkbox" checked class="w-4 h-4 rounded accent-violet-600">
+          <span class="text-sm">En stock</span>
+        </label>
+
+        <label class="block sm:col-span-2"><span class="text-xs font-medium text-slate-500">Imagen (sube archivo o pega URL)</span>
+          <div class="mt-1 flex gap-2">
+            <input id="p-imagen-url" placeholder="https://... o images/producto.jpg" class="flex-1 px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 outline-none focus:ring-2 ring-violet-500/50">
+            <label class="px-4 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-medium flex items-center gap-1">
+              📁 Subir
+              <input id="p-imagen-file" type="file" accept="image/*" class="hidden">
+            </label>
+          </div>
+        </label>
+
+        <div class="sm:col-span-2 flex gap-3 items-center">
+          <div id="preview-wrap" class="hidden">
+            <img id="preview-img" class="w-20 h-20 rounded-xl object-cover border-2 border-violet-500">
+          </div>
+          <p id="file-info" class="text-xs text-slate-500"></p>
+        </div>
+
+        <label class="block"><span class="text-xs font-medium text-slate-500">Stripe Payment Link</span>
+          <input id="p-stripe" placeholder="https://buy.stripe.com/..." class="mt-1 w-full px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 outline-none focus:ring-2 ring-violet-500/50"></label>
+
+        <label class="block"><span class="text-xs font-medium text-slate-500">MercadoPago Link</span>
+          <input id="p-mp" placeholder="https://mpago.la/..." class="mt-1 w-full px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 outline-none focus:ring-2 ring-violet-500/50"></label>
+
+        <div class="sm:col-span-2 flex justify-end gap-2">
+          <button type="submit" class="btn-primary px-6 py-2.5 rounded-xl text-white font-semibold">
+            <span id="btn-submit-text">Añadir producto</span>
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- LISTA PRODUCTOS -->
+    <section class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5">
+      <h2 class="font-bold text-lg mb-5">📦 Productos <span id="count-productos" class="text-sm text-slate-500 font-normal"></span></h2>
+      <div id="lista-productos" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+    </section>
+
+  </main>
+</div>
+
+<div id="toasts" class="fixed top-20 right-4 z-[60] space-y-2"></div>
+
+<script src="js/admin.js"></script>
+</body>
+</html>

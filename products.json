@@ -1,0 +1,26 @@
+{
+  "tienda": {
+    "nombre": "Aurora Store",
+    "descripcion": "Productos seleccionados con amor para ti",
+    "whatsapp": "521234567890",
+    "moneda": "USD",
+    "simbolo": "$",
+    "email": "hola@aurorastore.com",
+    "instagram": "https://instagram.com/aurorastore",
+    "logo": "🛍️"
+  },
+  "productos": [
+    { "id": "p1", "nombre": "Camiseta Oversize Premium", "precio": 29.99, "categoria": "Ropa", "descripcion": "Algodón orgánico 100%, corte relajado y suave al tacto.", "imagen": "https://picsum.photos/seed/shirt1/600/600", "etiquetas": ["nuevo"], "stock": true, "stripeLink": "", "mercadopagoLink": "" },
+    { "id": "p2", "nombre": "Hoodie Essential", "precio": 59.99, "categoria": "Ropa", "descripcion": "Sudadera con capucha, interior afelpado y bolsillo canguro.", "imagen": "https://picsum.photos/seed/hoodie2/600/600", "etiquetas": ["oferta"], "stock": true, "stripeLink": "", "mercadopagoLink": "" },
+    { "id": "p3", "nombre": "Jeans Relaxed Fit", "precio": 79.99, "categoria": "Ropa", "descripcion": "Denim de alta calidad con lavado medio y corte cómodo.", "imagen": "https://picsum.photos/seed/jeans3/600/600", "etiquetas": [], "stock": true, "stripeLink": "", "mercadopagoLink": "" },
+    { "id": "p4", "nombre": "Gorra Minimal", "precio": 24.99, "categoria": "Accesorios", "descripcion": "Gorra de sarga de algodón con cierre ajustable.", "imagen": "https://picsum.photos/seed/cap4/600/600", "etiquetas": [], "stock": true, "stripeLink": "", "mercadopagoLink": "" },
+    { "id": "p5", "nombre": "Bolso Canvas", "precio": 45.00, "categoria": "Accesorios", "descripcion": "Bolso tote de lona resistente con asas reforzadas.", "imagen": "https://picsum.photos/seed/bag5/600/600", "etiquetas": ["nuevo"], "stock": true, "stripeLink": "", "mercadopagoLink": "" },
+    { "id": "p6", "nombre": "Gafas de Sol Aura", "precio": 89.00, "categoria": "Accesorios", "descripcion": "Protección UV400 con montura de acetato ligera.", "imagen": "https://picsum.photos/seed/sun6/600/600", "etiquetas": [], "stock": true, "stripeLink": "", "mercadopagoLink": "" },
+    { "id": "p7", "nombre": "Reloj Clásico", "precio": 149.00, "categoria": "Accesorios", "descripcion": "Movimiento de cuarzo, correa de piel genuina.", "imagen": "https://picsum.photos/seed/watch7/600/600", "etiquetas": ["oferta"], "stock": true, "stripeLink": "", "mercadopagoLink": "" },
+    { "id": "p8", "nombre": "Zapatillas Urban", "precio": 119.00, "categoria": "Calzado", "descripcion": "Suela de goma antideslizante y plantilla acolchada.", "imagen": "https://picsum.photos/seed/shoe8/600/600", "etiquetas": ["nuevo"], "stock": true, "stripeLink": "", "mercadopagoLink": "" },
+    { "id": "p9", "nombre": "Botines Cuero", "precio": 159.00, "categoria": "Calzado", "descripcion": "Cuero vacuno curtido, costuras reforzadas.", "imagen": "https://picsum.photos/seed/boot9/600/600", "etiquetas": [], "stock": true, "stripeLink": "", "mercadopagoLink": "" },
+    { "id": "p10", "nombre": "Sandalias Verano", "precio": 69.00, "categoria": "Calzado", "descripcion": "Diseño fresco con tiras ajustables y suela flexible.", "imagen": "https://picsum.photos/seed/sandal10/600/600", "etiquetas": ["oferta"], "stock": true, "stripeLink": "", "mercadopagoLink": "" },
+    { "id": "p11", "nombre": "Vela Aromática", "precio": 19.99, "categoria": "Hogar", "descripcion": "Cera de soja con aroma a sándalo y vainilla. 40h.", "imagen": "https://picsum.photos/seed/candle11/600/600", "etiquetas": [], "stock": true, "stripeLink": "", "mercadopagoLink": "" },
+    { "id": "p12", "nombre": "Taza Cerámica", "precio": 14.99, "categoria": "Hogar", "descripcion": "Cerámica esmaltada a mano, apta para microondas.", "imagen": "https://picsum.photos/seed/mug12/600/600", "etiquetas": ["nuevo"], "stock": true, "stripeLink": "", "mercadopagoLink": "" }
+  ]
+}
