@@ -1,13 +1,13 @@
 // ==================== CONFIG ====================
-const ADMIN_PASSWORD = 'admin123'; // ⚠️ cambia esto
+const ADMIN_PASSWORD = 'admin121970'; // ⚠️ cambia esto
 const STORAGE_KEY = 'catalogo_data';
 
 // ==================== ESTADO ====================
 let data = {
   tienda: {
-    nombre: 'Aurora Store',
+    nombre: 'CAV Store',
     descripcion: 'Productos seleccionados con amor para ti',
-    whatsapp: '521234567890',
+    whatsapp: '+15404780618',
     moneda: 'USD',
     simbolo: '$',
     email: '',
