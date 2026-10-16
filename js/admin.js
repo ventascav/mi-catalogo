@@ -5,9 +5,9 @@ const STORAGE_KEY = 'catalogo_data';
 // ==================== ESTADO ====================
 let data = {
   tienda: {
-    nombre: 'CAV Store',
+    nombre: 'Ventas CAV',
     descripcion: 'Productos seleccionados con amor para ti',
-    whatsapp: '+15404780618',
+    whatsapp: '15404780618',
     moneda: 'USD',
     simbolo: '$',
     email: '',
